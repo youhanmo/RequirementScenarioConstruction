@@ -127,7 +127,7 @@ for inner in sentence_list:
          }
     dic_list.append(dic)
     
-    if not (inner_entity[0] == '本车' or inner_entity[0] == '公路' or inner_entity[0] == '车' or inner_entity[0] == '道路'):
+    if not (inner_entity[0] == '本车' or inner_entity[0] == '公路' or inner_entity[0] == '车' or inner_entity[0] == '道路' or inner_entity[0] == '高速公路' or inner_entity[0] == '高速路'):
         dic['entity1'] = inner_entity[1]
         dic['entity2'] = inner_entity[0]
         if dic['direction'] == '左侧':
