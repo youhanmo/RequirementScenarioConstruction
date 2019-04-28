@@ -9,13 +9,14 @@ import random
 from random import choice
 
 #MON 是 Max Object Number的简写
-#dictlist=[{'entity1': '本车', 'entity2': '桥梁', 'direction': '右侧', 'distance': '55'}, {'entity1': '道路', 'entity2': '办公楼', 'direction': '右侧', 'distance': '118'},{'entity1': '本车', 'entity2': '办公楼', 'direction': '左侧', 'distance': '7'},{'entity1': '本车', 'entity2': '办公楼', 'direction': '左侧', 'distance': '120'}]
+#dictlist=[{'entity1': '本车', 'entity2': '隧道', 'direction': '右侧', 'distance': '55'}, {'entity1': '道路', 'entity2': '办公楼', 'direction': '右侧', 'distance': '118'},{'entity1': '本车', 'entity2': '办公楼', 'direction': '左侧', 'distance': '7'},{'entity1': '本车', 'entity2': '办公楼', 'direction': '左侧', 'distance': '120'}]
 order = {'link':0,
         'forest':0,
          'house':0,
          'mount':0,
          'plate':0,
          'bridge':0,
+         'tunnel':0,
          'object':56
          }
 
@@ -185,6 +186,15 @@ def cast_dict(dic):
         #Link.0.RoadBridge.0.Material.0 = Textures/Infrastructure/Concrete_01.jpg 0 0 0 0 0 0 1 1 0 0 0
         order['object'] += 1
         order['bridge'] += 1
+        return se
+    elif dic['entity2'] == '隧道' or dic['entity2'] == '通道':
+        startx = float(dic['distance'])
+        endx = startx + 30
+        se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+'.ID = '+ str(order['object']) +' \n'
+        se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+' = '+str(startx)+' 0 '+ str(endx) + ' 0 5 1 1 0 0 Standard "" \n'
+        se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+'.Material.0 = Textures/Infrastructure/Concrete_01.jpg 0 0 0 0 0 0 1 1 0 0 0 \n'
+        order['object'] += 1
+        order['tunnel'] += 1
         return se
     else: 
         return se

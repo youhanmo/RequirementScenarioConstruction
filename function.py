@@ -83,6 +83,7 @@ def transform(inner):
     trainfeatures = Variable(trainfeatures)
     return trainfeatures
 
+
 #为了保证模型构建词典一致，而且在之前的文件中有太多函数交杂，暂时不便于独立出新文件，所以重写了上述几个函数，以生成相同词典
 
 sentences_file = open("data.txt","r")
@@ -119,11 +120,18 @@ for inner in sentence_list:
     else:
         #print('右侧')
         dirr='右侧'
-
+    #print(inner_number)
+    length = 0
+    need_length = False
+    
+        
+    #if len(inner_number) == 2:
+    #    length = inner_number[1]
     dic = { 'entity1':inner_entity[0],
            'entity2':inner_entity[1],
            'direction':dirr,
            'distance':inner_number[0]
+           #'length':length
          }
     dic_list.append(dic)
     
