@@ -150,7 +150,7 @@ def cast_dict(dic):
         order['object'] += 1
         order['mount'] += 1
         return se
-    elif dic['entity2'] == '标志牌' or dic['entity2'] == '交通标志':
+    elif dic['entity2'] == '标志牌' or dic['entity2'] == '标识' or dic['entity2'] == '标识牌':
         default_offset = 5
         site = 1
         startx = float(dic['distance'])
@@ -189,7 +189,7 @@ def cast_dict(dic):
         return se
     elif dic['entity2'] == '隧道' or dic['entity2'] == '通道':
         startx = float(dic['distance'])
-        endx = startx + 30
+        endx = startx + float(dic['length'])
         se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+'.ID = '+ str(order['object']) +' \n'
         se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+' = '+str(startx)+' 0 '+ str(endx) + ' 0 5 1 1 0 0 Standard "" \n'
         se += 'Link.'+str(order['link'])+'.RoadTunnel.'+str(order['tunnel'])+'.Material.0 = Textures/Infrastructure/Concrete_01.jpg 0 0 0 0 0 0 1 1 0 0 0 \n'

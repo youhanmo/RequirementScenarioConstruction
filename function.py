@@ -83,7 +83,23 @@ def transform(inner):
     trainfeatures = Variable(trainfeatures)
     return trainfeatures
 
+def is_available_entity(innerlist):
+    entitylist = ['树林','森林','房屋','加油站','商店','办公楼','超市','车站','地铁站','广告牌','标识','标志牌','标识牌','红绿灯','信号灯','桥','桥梁','高架桥','隧道','通道']
+    is_valid_entity = True
+    for word in innerlist:
+        if word not in entitylist:
+            is_valid_entity = False
+    
+    return is_valid_entity
 
+def remove_unusable_entity(innerlist):
+    entitylist = ['道路','公路','本车','车','高速路','树林','森林','房屋','加油站','商店','办公楼','超市','车站','地铁站','广告牌','标识','标志牌','标识牌','红绿灯','信号灯','桥','桥梁','高架桥','隧道','通道']
+    
+    for word in innerlist:
+        if word not in entitylist:
+            innerlist.remove(word)
+    
+    return innerlist
 #为了保证模型构建词典一致，而且在之前的文件中有太多函数交杂，暂时不便于独立出新文件，所以重写了上述几个函数，以生成相同词典
 
 sentences_file = open("data.txt","r")
@@ -102,13 +118,18 @@ while '' in sentence_list:
 dic_list = []
 for inner in sentence_list:
     inner_entity,inner_direction,inner_number = get_entity(inner)
-    inner_participle = sen_split_STD(inner)
+    inner_participle = sen_split_CRF(inner)
     #print(inner_participle)
     #inner='公路 在 房屋 的 前方 30 米 右侧'
     #print(inner_participle)
     for number in inner_number:
         if(not number.isnumeric()):
             inner_number.remove(number)
+    inner_entity = remove_unusable_entity(inner_entity)
+    if len(inner_entity)<2:
+        EOE = 'can not execute this sentence: \n' + inner
+        print(EOE)
+        continue
     #print(inner_participle)
     #print(transform(inner_participle))
     dirr=''
@@ -122,18 +143,18 @@ for inner in sentence_list:
         dirr='右侧'
     #print(inner_number)
     length = 0
-    need_length = False
+    #need_length = False
     
         
-    #if len(inner_number) == 2:
-    #    length = inner_number[1]
+    if len(inner_number) == 2:
+        length = inner_number[1]
     dic = { 'entity1':inner_entity[0],
            'entity2':inner_entity[1],
            'direction':dirr,
-           'distance':inner_number[0]
-           #'length':length
+           'distance':inner_number[0],
+           'length':length
          }
-    dic_list.append(dic)
+    
     
     if not (inner_entity[0] == '本车' or inner_entity[0] == '公路' or inner_entity[0] == '车' or inner_entity[0] == '道路' or inner_entity[0] == '高速公路' or inner_entity[0] == '高速路'):
         dic['entity1'] = inner_entity[1]
@@ -142,7 +163,8 @@ for inner in sentence_list:
             dic['direction'] = '右侧'
         elif dic['direction'] == '右侧':
             dic['direction'] = '左侧'
-    #规范化dict       
+    #规范化dict 
+    dic_list.append(dic)      
     
 #print(dic_list)
 dict2rd5(dic_list)
